@@ -9,9 +9,9 @@ Everything here is plain Markdown and short shell scripts. Read it before you in
 | Item | What it does | Works in |
 |---|---|---|
 | `skills/improve-prompt` | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
-| `skills/lean-mode` | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
-| `skills/plain-writing` | Rules for prose that reads like a clear human wrote it. | Claude Code |
-| `hooks/claude/` | Optional nudges: loads lean-mode at session start, warns before reading a huge file whole, flags a bloated memory folder, suggests `/clear` after 40 prompts. | Claude Code |
+| `skills/token-diet` | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
+| `skills/anti-ai-slop-writing` | Rules for prose that reads like a person wrote it. | Claude Code |
+| `hooks/claude/` | Optional nudges: loads token-diet at session start, warns before reading a huge file whole, flags a bloated memory folder, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
 | `sync/sync.sh` | Optional: keep your skills identical on several machines through a private git repo. | Any machine with git |
 
@@ -42,7 +42,7 @@ Copy any `skills/<name>` folder into `~/.claude/skills/`. Hooks are optional; se
 
 | Hook | Event | Effect |
 |---|---|---|
-| `session-rules.sh` | SessionStart | Loads `skills/lean-mode/activation.md` into every session. Remove it to make lean mode opt-in. |
+| `session-rules.sh` | SessionStart | Loads `skills/token-diet/activation.md` into every session. Remove it to make it opt-in. |
 | `big-read-guard.sh` | Before Read | Suggests searching first when a file over 200 KB is read whole. |
 | `memory-check.sh` | SessionStart | Silent unless Claude's memory index passes 50 lines, a memory file passes 3 KB, or one is 60 days old. Never deletes. |
 | `session-length.sh` | Each prompt | One nudge after 40 prompts to check the session is still one task. |
@@ -66,6 +66,13 @@ It removes the kit's hooks and their `settings.json` entries, and removes each k
 
 A new skill needs a `SKILL.md` with `name` and `description`, must be your own work or carry a compatible licence, and must contain no personal paths or secrets. Keep it short.
 
+## Credits
+
+- `skills/token-diet` is a shortened adaptation of [Kulaxyz/token-diet](https://github.com/Kulaxyz/token-diet).
+- `skills/anti-ai-slop-writing` is a shortened adaptation of [jalaalrd/anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing).
+
+Neither source repo publishes a licence, so those two folders are not covered by this repo's licence; rights stay with their authors. Authors: open an issue and they will be credited differently or removed.
+
 ## Licence
 
-MIT. See [LICENSE](LICENSE).
+MIT for everything except the two adapted skills above. See [LICENSE](LICENSE).
