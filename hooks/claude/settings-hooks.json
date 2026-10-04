@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Read", "hooks": [ { "type": "command", "command": "bash ~/.claude/hooks/agent-starter-kit/big-read-guard.sh" } ] }
+    ],
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "bash ~/.claude/hooks/agent-starter-kit/session-rules.sh" } ] },
+      { "hooks": [ { "type": "command", "command": "bash ~/.claude/hooks/agent-starter-kit/memory-check.sh" } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "bash ~/.claude/hooks/agent-starter-kit/session-length.sh" } ] }
+    ]
+  }
+}
