@@ -6,19 +6,19 @@ A user has given you this repo's link and asked you to set it up. Follow these s
 
 1. **Check tools.** `git`, `bash` and `jq` must be installed. If `jq` is missing, tell the user the install command (`brew install jq` on macOS, `sudo apt install jq` on Debian/Ubuntu) and wait. Don't install anything without asking.
 2. **Get the repo.** If `~/agent-starter-kit` exists, run `git -C ~/agent-starter-kit pull`. Otherwise run `git clone https://github.com/fatimamajeed671/agent-starter-kit.git ~/agent-starter-kit`.
-3. **Explain and ask.** In three lines, tell the user what the skills and hooks do (the README table). Ask: skills and hooks (recommended), or skills only?
-4. **Dry run.** `~/agent-starter-kit/install.sh --claude --dry-run` (add `--no-hooks` for skills only). Show the user the output and ask to go ahead.
+3. **Choose skills.** Run `~/agent-starter-kit/install.sh --list` and show the user each skill with a one-line summary. Ask which ones to integrate (all, or a selection). Then ask whether they also want the Claude Code hooks (recommended) or skills only, after a one-line summary of each hook from the README. Don't assume; wait for their answer.
+4. **Dry run.** `~/agent-starter-kit/install.sh --claude --skills <chosen,comma,separated> --dry-run`, adding `--no-hooks` if they chose skills only. Show the user the output and ask to go ahead.
 5. **Install.** Run the same command without `--dry-run`. Report each skill as installed, updated, up to date or skipped. A skipped skill means the user already has their own version; leave it alone and say so.
 6. **Verify.**
-   - `ls ~/.claude/skills` shows the kit's skills.
+   - `ls ~/.claude/skills` shows the chosen skills.
    - `jq -e . ~/.claude/settings.json` succeeds.
-   - With hooks: `bash ~/.claude/hooks/agent-starter-kit/session-rules.sh | jq .` prints JSON.
+   - With hooks: `jq -r '.. | .command? // empty' ~/.claude/settings.json | grep agent-starter-kit` lists the kit's hooks.
 7. **Finish.** Tell the user to start a new Claude Code session so the skills load, and that `/improve-prompt` is a good first one to try.
 8. **Optional: sync across machines.** Only if the user says they use more than one computer and wants their skills the same on each: point them to `docs/sync.md` and offer to walk through it. It needs a private GitHub repo of their own. Otherwise skip this step.
 
 ## Updating later
 
-`git -C ~/agent-starter-kit pull && ~/agent-starter-kit/install.sh --claude`. Kit skills the user hasn't changed are updated; changed ones are skipped.
+`git -C ~/agent-starter-kit pull && ~/agent-starter-kit/install.sh --claude`. Without `--skills`, it updates only the skills installed before; ones the user changed are skipped. To add a skill later: `install.sh --claude --skills <name>`.
 
 ## Codex and other agents
 

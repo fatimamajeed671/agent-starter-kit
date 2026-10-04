@@ -2,16 +2,23 @@
 # Install or update the starter kit in Claude Code (~/.claude). Copies files; never overwrites skills you changed.
 # Re-run after `git pull` to update: unchanged kit skills are replaced, edited ones are skipped.
 set -euo pipefail
-usage() { echo "Usage: ./install.sh --claude [--dry-run] [--no-hooks] | --uninstall [--dry-run]"; exit "${1:-1}"; }
-mode=""; dry=0; hooks=1
-for a in "$@"; do case "$a" in
-  --claude) mode=install ;; --uninstall) mode=uninstall ;;
+usage() { echo "Usage: ./install.sh --list | --claude [--skills a,b] [--dry-run] [--no-hooks] | --uninstall [--dry-run]"; exit "${1:-1}"; }
+mode=""; dry=0; hooks=1; pick=""
+while [ $# -gt 0 ]; do a=$1; shift; case "$a" in
+  --claude) mode=install ;; --uninstall) mode=uninstall ;; --list) mode=list ;;
+  --skills) pick=$(echo "${1:-}" | tr ',' ' '); shift || true ;;
   --dry-run) dry=1 ;; --no-hooks) hooks=0 ;; -h|--help) usage 0 ;; *) usage ;;
 esac; done
 [ -n "$mode" ] || usage
+kit=$(cd "$(dirname "$0")" && pwd)
+if [ "$mode" = list ]; then
+  for f in "$kit"/skills/*/SKILL.md; do
+    printf '%s: %s\n' "$(basename "$(dirname "$f")")" "$(awk '/^description:/{sub(/^description:[ ]*>?-?[ ]*/,""); d=$0; getline; while ($0 ~ /^  /) {sub(/^ +/,""); d=d" "$0; getline} print d; exit}' "$f")"
+  done
+  exit 0
+fi
 command -v jq >/dev/null || { echo "jq is required: brew install jq (macOS) or apt install jq"; exit 1; }
 
-kit=$(cd "$(dirname "$0")" && pwd)
 c="$HOME/.claude"; hookdir="$c/hooks/agent-starter-kit"; settings="$c/settings.json"
 run() { if [ "$dry" = 1 ]; then echo "  would run: $*"; else "$@"; fi; }
 tag='agent-starter-kit/'
@@ -22,9 +29,14 @@ recorded() { awk -v n="$1" '$1==n {print $2}' "$manifest" 2>/dev/null; }
 record() { [ "$dry" = 1 ] && return; { grep -v "^$1 " "$manifest" 2>/dev/null || true; echo "$1 $2"; } > "$manifest.tmp"; mv "$manifest.tmp" "$manifest"; }
 
 if [ "$mode" = install ]; then
+  # Which skills: --skills if given; else the ones installed before (update); else all.
+  if [ -z "$pick" ] && [ -s "$manifest" ]; then pick=$(awk '{print $1}' "$manifest" | tr '\n' ' '); fi
+  if [ -z "$pick" ]; then pick=$(for s in "$kit"/skills/*/; do basename "$s"; done | tr '\n' ' '); fi
+  for n in $pick; do [ -d "$kit/skills/$n" ] || { echo "Unknown skill: $n (see ./install.sh --list)"; exit 1; }; done
+  echo "skills: $pick"
   run mkdir -p "$c/skills"
-  for s in "$kit"/skills/*/; do
-    n=$(basename "$s"); t="$c/skills/$n"; new=$(dirhash "${s%/}")
+  for n in $pick; do
+    s="$kit/skills/$n/"; t="$c/skills/$n"; new=$(dirhash "${s%/}")
     if [ ! -e "$t" ]; then
       run cp -R "${s%/}" "$t"; record "$n" "$new"; st "$n" installed
     else

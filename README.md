@@ -12,7 +12,7 @@ Paste this into Claude Code:
 Set up https://github.com/fatimamajeed671/agent-starter-kit for me. Follow its SETUP.md.
 ```
 
-Claude clones the repo, explains what it installs, shows a dry run, and installs after you agree. Run the same line again later to update.
+Claude clones the repo, lists the skills and asks which ones you want, shows a dry run, and installs after you agree. Run the same line again later to update.
 
 ## What's inside
 
@@ -32,8 +32,9 @@ Claude clones the repo, explains what it installs, shows a dry run, and installs
 ```sh
 git clone https://github.com/fatimamajeed671/agent-starter-kit.git
 cd agent-starter-kit
-./install.sh --claude --dry-run   # see what would change
-./install.sh --claude             # or add --no-hooks for skills only
+./install.sh --list                                         # see the skills
+./install.sh --claude --skills improve-prompt,token-diet --dry-run
+./install.sh --claude --skills improve-prompt,token-diet     # omit --skills for all; add --no-hooks for skills only
 ```
 
 The installer copies the skills into `~/.claude/skills/` and the hooks into `~/.claude/hooks/agent-starter-kit/`, then adds the hooks to `~/.claude/settings.json` after saving a backup. Running it again after `git pull` updates the kit's skills, except ones you've changed, which it skips. It never overwrites a skill you already had. It needs `jq`. Start a new Claude Code session afterwards.
