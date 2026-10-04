@@ -28,4 +28,4 @@ There is no skills folder. Copy `AGENTS.md` into the user's project root, or mer
 
 - Never overwrite or delete a skill the user already has.
 - Change `~/.claude/settings.json` only through `install.sh`, which backs it up first.
-- Never commit or push to this repo. To suggest a change, see CONTRIBUTING.md.
+- Never commit or push to this repo.

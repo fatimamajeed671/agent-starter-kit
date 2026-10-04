@@ -73,10 +73,6 @@ It removes the kit's hooks and their `settings.json` entries, and removes each k
 
 `sync/sync.sh` commits your `~/.claude/skills` and `~/.claude/hooks` to a private repo, pulls the other machine's changes and pushes, when you run it. No scheduler, no AI. It refuses to commit likely secrets or a mass deletion. Setup: [docs/sync.md](docs/sync.md).
 
-## Contributing
-
-Fork the repo, make your change, and open a pull request. Every pull request is reviewed before it is merged. See [CONTRIBUTING.md](CONTRIBUTING.md).
-
 ## Credits
 
 - `skills/token-diet` is a shortened adaptation of [Kulaxyz/token-diet](https://github.com/Kulaxyz/token-diet).
