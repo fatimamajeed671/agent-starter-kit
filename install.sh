@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Install the starter kit into Claude Code (~/.claude). Copies files; never overwrites your own skills.
+# Install or update the starter kit in Claude Code (~/.claude). Copies files; never overwrites skills you changed.
+# Re-run after `git pull` to update: unchanged kit skills are replaced, edited ones are skipped.
 set -euo pipefail
 usage() { echo "Usage: ./install.sh --claude [--dry-run] [--no-hooks] | --uninstall [--dry-run]"; exit "${1:-1}"; }
 mode=""; dry=0; hooks=1
@@ -14,13 +15,24 @@ kit=$(cd "$(dirname "$0")" && pwd)
 c="$HOME/.claude"; hookdir="$c/hooks/agent-starter-kit"; settings="$c/settings.json"
 run() { if [ "$dry" = 1 ]; then echo "  would run: $*"; else "$@"; fi; }
 tag='agent-starter-kit/'
+manifest="$c/.agent-starter-kit-manifest"   # "<skill> <hash>" for each skill the kit installed
+st() { if [ "$dry" = 1 ]; then echo "skill $1: would be $2"; else echo "skill $1: $2"; fi; }
+dirhash() { (cd "$1" && find . -type f ! -name .DS_Store -print0 | LC_ALL=C sort -z | xargs -0 shasum | shasum | cut -c1-40); }
+recorded() { awk -v n="$1" '$1==n {print $2}' "$manifest" 2>/dev/null; }
+record() { [ "$dry" = 1 ] && return; { grep -v "^$1 " "$manifest" 2>/dev/null || true; echo "$1 $2"; } > "$manifest.tmp"; mv "$manifest.tmp" "$manifest"; }
 
 if [ "$mode" = install ]; then
   run mkdir -p "$c/skills"
   for s in "$kit"/skills/*/; do
-    n=$(basename "$s")
-    if [ -e "$c/skills/$n" ]; then echo "skip skill $n: $c/skills/$n already exists"
-    else run cp -R "${s%/}" "$c/skills/$n"; [ "$dry" = 1 ] || echo "skill $n: installed"; fi
+    n=$(basename "$s"); t="$c/skills/$n"; new=$(dirhash "${s%/}")
+    if [ ! -e "$t" ]; then
+      run cp -R "${s%/}" "$t"; record "$n" "$new"; st "$n" installed
+    else
+      cur=$(dirhash "$t")
+      if [ "$cur" = "$new" ]; then record "$n" "$new"; echo "skill $n: up to date"
+      elif [ "$cur" = "$(recorded "$n")" ]; then run rm -rf "$t"; run cp -R "${s%/}" "$t"; record "$n" "$new"; st "$n" updated
+      else echo "skill $n: skipped, $t has your own changes (or is not from this kit)"; fi
+    fi
   done
   [ "$hooks" = 1 ] || { echo "Done (no hooks)."; exit 0; }
   run mkdir -p "$hookdir"
@@ -46,10 +58,12 @@ fi
 for s in "$kit"/skills/*/; do
   n=$(basename "$s"); t="$c/skills/$n"
   [ -d "$t" ] || continue
-  if diff -rq "${s%/}" "$t" >/dev/null; then run rm -rf "$t"; echo "skill $n: removed"
+  cur=$(dirhash "$t")
+  if [ "$cur" = "$(dirhash "${s%/}")" ] || [ "$cur" = "$(recorded "$n")" ]; then run rm -rf "$t"; echo "skill $n: removed"
   else echo "skill $n: kept (differs from the kit version)"; fi
 done
 [ -d "$hookdir" ] && run rm -rf "$hookdir" && echo "hooks: removed"
+[ "$dry" = 1 ] || rm -f "$manifest"
 if [ -f "$settings" ]; then
   if [ "$dry" = 1 ]; then echo "  would remove kit hooks from $settings"
   else

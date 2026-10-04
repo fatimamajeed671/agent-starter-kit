@@ -4,6 +4,16 @@ A small, readable set of skills and rules to make an AI coding agent clearer, ch
 
 Everything here is plain Markdown and short shell scripts. Read it before you install it: skills and hooks run with your permissions.
 
+## Quick setup with Claude
+
+Paste this into Claude Code:
+
+```
+Set up https://github.com/fatimamajeed671/agent-starter-kit for me. Follow its SETUP.md.
+```
+
+Claude clones the repo, explains what it installs, shows a dry run, and installs after you agree. Run the same line again later to update.
+
 ## What's inside
 
 | Item | What it does | Works in |
@@ -26,7 +36,7 @@ cd agent-starter-kit
 ./install.sh --claude             # or add --no-hooks for skills only
 ```
 
-The installer copies the skills into `~/.claude/skills/` and the hooks into `~/.claude/hooks/agent-starter-kit/`, then adds the hooks to `~/.claude/settings.json` after saving a backup. It never overwrites a skill you already have, and running it twice changes nothing. It needs `jq`. Start a new Claude Code session afterwards.
+The installer copies the skills into `~/.claude/skills/` and the hooks into `~/.claude/hooks/agent-starter-kit/`, then adds the hooks to `~/.claude/settings.json` after saving a backup. Running it again after `git pull` updates the kit's skills, except ones you've changed, which it skips. It never overwrites a skill you already had. It needs `jq`. Start a new Claude Code session afterwards.
 
 Skills must be real folders in `~/.claude/skills`; Claude Code does not load symlinked skill folders, so the installer copies.
 
@@ -58,13 +68,13 @@ All hooks only add a note for the agent. None blocks a tool or edits files. To d
 
 It removes the kit's hooks and their `settings.json` entries, and removes each kit skill only if you have not edited it.
 
-## Sync across machines (optional)
+## Sync across machines (optional, only if you want it)
 
 `sync/sync.sh` commits your `~/.claude/skills` and `~/.claude/hooks` to a private repo, pulls the other machine's changes and pushes, when you run it. No scheduler, no AI. It refuses to commit likely secrets or a mass deletion. Setup: [docs/sync.md](docs/sync.md).
 
 ## Contributing
 
-A new skill needs a `SKILL.md` with `name` and `description`, must be your own work or carry a compatible licence, and must contain no personal paths or secrets. Keep it short.
+Fork the repo, make your change, and open a pull request. Every pull request is reviewed before it is merged. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Credits
 
