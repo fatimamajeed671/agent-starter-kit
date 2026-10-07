@@ -1,0 +1,2 @@
+commit 56929b9847
+markdown-only copy of pbakaus/impeccable/.claude/skills/impeccable (no scripts/). Installed 2026-10-06.

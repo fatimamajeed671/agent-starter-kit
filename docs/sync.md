@@ -52,3 +52,5 @@ If checkout says files would be overwritten, move those aside and run it again. 
 Stage the listed paths, refuse likely secrets, refuse more than 3 deletions, commit, `pull --rebase` (stop on conflict), push. Never force-pushes.
 
 `settings.json` is not synced, because it holds machine-specific entries. Register hooks on each machine (see docs/claude-code.md).
+
+Note: this sync is flat (`~/.claude/skills/<name>`) and does not use the kit's segment folders.
