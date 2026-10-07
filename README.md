@@ -16,12 +16,18 @@ Claude clones the repo, lists the skills and asks which ones you want, shows a d
 
 ## What's inside
 
-| Item | What it does | Works in |
-|---|---|---|
-| `skills/improve-prompt` | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
-| `skills/token-diet` | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
-| `skills/anti-ai-slop-writing` | Rules for prose that reads like a person wrote it. | Claude Code |
-| `hooks/claude/` | Optional nudges: loads token-diet at session start, warns before reading a huge file whole, flags a bloated memory folder, suggests `/clear` after 40 prompts. | Claude Code |
+Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed flat (`~/.claude/skills/<name>`).
+
+| Item | Segment | What it does | Works in |
+|---|---|---|---|
+| `skills/content/anti-ai-slop-writing` | content | Rules for prose that reads like a person wrote it. | Claude Code |
+| `skills/content/headline-writing` | content | Headlines and taglines: patterns, checks and sources. | Claude Code |
+| `skills/design/ui-ux-design` | design | Cited UX, layout and accessibility rules for pages and apps. See its `SOURCES.md`. | Claude Code |
+| `skills/web-app/web-app-standards` | web-app | Security headers, QA checklist, deploy-by-hash, browser testing gotchas, two audit scripts. | Claude Code |
+| `skills/agent-workflow/agent-workflow-practices` | agent-workflow | Roles by model tier, short reports, batching, handoff files for multi-agent work. | Claude Code |
+| `skills/agent-workflow/improve-prompt` | agent-workflow | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
+| `skills/agent-workflow/token-diet` | agent-workflow | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
+| `hooks/claude/` | Optional nudges in one script: loads token-diet and the subagent model rules at session start, warns before reading a huge file whole, flags a bloated memory folder, warns when the context grows large, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
 | `sync/sync.sh` | Optional: keep your skills identical on several machines through a private git repo. | Any machine with git |
 
@@ -35,6 +41,7 @@ cd agent-starter-kit
 ./install.sh --list                                         # see the skills
 ./install.sh --claude --skills improve-prompt,token-diet --dry-run
 ./install.sh --claude --skills improve-prompt,token-diet     # omit --skills for all; add --no-hooks for skills only
+./install.sh --claude --segment content,design --dry-run     # every skill in those segment folders
 ```
 
 The installer copies the skills into `~/.claude/skills/` and the hooks into `~/.claude/hooks/agent-starter-kit/`, then adds the hooks to `~/.claude/settings.json` after saving a backup. Running it again after `git pull` updates the kit's skills, except ones you've changed, which it skips. It never overwrites a skill you already had. It needs `jq`. Start a new Claude Code session afterwards.
@@ -47,18 +54,19 @@ There is no skills folder to install into. Copy `AGENTS.md` into your project ro
 
 ### Manual
 
-Copy any `skills/<name>` folder into `~/.claude/skills/`. Hooks are optional; see [docs/claude-code.md](docs/claude-code.md).
+Copy any `skills/<segment>/<name>` folder into `~/.claude/skills/<name>` (flat, no segment folder). Hooks are optional; see [docs/claude-code.md](docs/claude-code.md).
 
 ## The hooks
 
-| Hook | Event | Effect |
-|---|---|---|
-| `session-rules.sh` | SessionStart | Loads `skills/token-diet/activation.md` into every session. Remove it to make it opt-in. |
-| `big-read-guard.sh` | Before Read | Suggests searching first when a file over 200 KB is read whole. |
-| `memory-check.sh` | SessionStart | Silent unless Claude's memory index passes 50 lines, a memory file passes 3 KB, or one is 60 days old. Never deletes. |
-| `session-length.sh` | Each prompt | One nudge after 40 prompts to check the session is still one task. |
+| Event | Effect |
+|---|---|
+| SessionStart | Loads `token-diet/activation.md` and `agent-workflow-practices/activation.md` (installed under `~/.claude/skills/`, source `skills/agent-workflow/`) into every session. Silent otherwise unless Claude's memory index passes 50 lines, a memory file passes 3 KB, or one is 60 days old (it never deletes). |
+| Before Read | Suggests searching first when a file over 200 KB is read whole, and when the same file is read whole twice. |
+| Each prompt | One nudge when the context passes about 100k tokens, a stronger one past 150k, and one after 40 prompts to check the session is still one task. |
 
-All hooks only add a note for the agent. None blocks a tool or edits files. To disable one, delete its entry from the `hooks` section of `~/.claude/settings.json`.
+All three events run one script, `hooks/claude/guard.sh`.
+
+The hook only adds a note for the agent. It never blocks a tool or edits files. To disable it, delete its entries from the `hooks` section of `~/.claude/settings.json`; to drop one nudge, delete that block in the script.
 
 ## Uninstall
 
@@ -75,8 +83,9 @@ It removes the kit's hooks and their `settings.json` entries, and removes each k
 
 ## Credits
 
-- `skills/token-diet` is a shortened adaptation of [Kulaxyz/token-diet](https://github.com/Kulaxyz/token-diet).
-- `skills/anti-ai-slop-writing` is a shortened adaptation of [jalaalrd/anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing).
+- `skills/agent-workflow/token-diet` is a shortened adaptation of [Kulaxyz/token-diet](https://github.com/Kulaxyz/token-diet).
+- `skills/content/anti-ai-slop-writing` is a shortened adaptation of [jalaalrd/anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing).
+- `skills/design/ui-ux-design` credits its sources and licences in its own `SOURCES.md` and `NOTICE` files.
 
 Neither source repo publishes a licence, so those two folders are not covered by this repo's licence; rights stay with their authors. Authors: open an issue and they will be credited differently or removed.
 
