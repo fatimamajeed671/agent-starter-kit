@@ -27,7 +27,7 @@ Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed 
 | `skills/agent-workflow/agent-workflow-practices` | agent-workflow | Roles by model tier, short reports, batching, handoff files for multi-agent work. | Claude Code |
 | `skills/agent-workflow/improve-prompt` | agent-workflow | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
 | `skills/agent-workflow/token-diet` | agent-workflow | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
-| `hooks/claude/` | Optional nudges: loads token-diet at session start, warns before reading a huge file whole, flags a bloated memory folder, suggests `/clear` after 40 prompts. | Claude Code |
+| `hooks/claude/` | Optional nudges in one script: loads token-diet and the subagent model rules at session start, warns before reading a huge file whole, flags a bloated memory folder, warns when the context grows large, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
 | `sync/sync.sh` | Optional: keep your skills identical on several machines through a private git repo. | Any machine with git |
 
@@ -58,14 +58,15 @@ Copy any `skills/<segment>/<name>` folder into `~/.claude/skills/<name>` (flat, 
 
 ## The hooks
 
-| Hook | Event | Effect |
-|---|---|---|
-| `session-rules.sh` | SessionStart | Loads `token-diet/activation.md` (installed at `~/.claude/skills/token-diet/`, source `skills/agent-workflow/token-diet/`) into every session. Remove it to make it opt-in. |
-| `big-read-guard.sh` | Before Read | Suggests searching first when a file over 200 KB is read whole. |
-| `memory-check.sh` | SessionStart | Silent unless Claude's memory index passes 50 lines, a memory file passes 3 KB, or one is 60 days old. Never deletes. |
-| `session-length.sh` | Each prompt | One nudge after 40 prompts to check the session is still one task. |
+| Event | Effect |
+|---|---|
+| SessionStart | Loads `token-diet/activation.md` and `agent-workflow-practices/activation.md` (installed under `~/.claude/skills/`, source `skills/agent-workflow/`) into every session. Silent otherwise unless Claude's memory index passes 50 lines, a memory file passes 3 KB, or one is 60 days old (it never deletes). |
+| Before Read | Suggests searching first when a file over 200 KB is read whole, and when the same file is read whole twice. |
+| Each prompt | One nudge when the context passes about 100k tokens, a stronger one past 150k, and one after 40 prompts to check the session is still one task. |
 
-All hooks only add a note for the agent. None blocks a tool or edits files. To disable one, delete its entry from the `hooks` section of `~/.claude/settings.json`.
+All three events run one script, `hooks/claude/guard.sh`.
+
+The hook only adds a note for the agent. It never blocks a tool or edits files. To disable it, delete its entries from the `hooks` section of `~/.claude/settings.json`; to drop one nudge, delete that block in the script.
 
 ## Uninstall
 

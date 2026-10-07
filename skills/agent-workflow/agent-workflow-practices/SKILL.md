@@ -49,3 +49,7 @@ Why: the cheapest tier misses visual issues, and a redo costs more than using th
 ## Skill hygiene
 
 - A skill holds process and open bugs only. No change history; keep the open-bugs list current by removing fixed items.
+
+## Writing skills
+
+A skill holds process and the current list of open bugs only. No change logs, "fixed on <date>" notes or deploy history: remove a bug entry once it is fixed and deployed, and phrase lessons from a fix as timeless gotchas. History belongs in work-folder reports.

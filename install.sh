@@ -56,19 +56,18 @@ if [ "$mode" = install ]; then
   done
   [ "$hooks" = 1 ] || { echo "Done (no hooks)."; exit 0; }
   run mkdir -p "$hookdir"
+  for old in big-read-guard lib memory-check session-length session-rules; do run rm -f "$hookdir/$old.sh"; done
   run cp "$kit"/hooks/claude/*.sh "$hookdir/"
   [ "$dry" = 1 ] || echo "hooks: copied to $hookdir"
-  if [ -f "$settings" ] && jq -e --arg t "$tag" '[.. | .command? // empty | select(contains($t))] | length > 0' "$settings" >/dev/null; then
-    echo "settings.json: kit hooks already registered, left unchanged"
+  [ -f "$settings" ] || run sh -c "echo '{}' > '$settings'"
+  run cp "$settings" "$settings.bak-$(date +%Y%m%d%H%M%S)" 2>/dev/null || true
+  if [ "$dry" = 1 ]; then echo "  would replace kit hooks in $settings"
   else
-    [ -f "$settings" ] || run sh -c "echo '{}' > '$settings'"
-    run cp "$settings" "$settings.bak-$(date +%Y%m%d%H%M%S)" 2>/dev/null || true
-    if [ "$dry" = 1 ]; then echo "  would merge hooks into $settings"
-    else
-      jq -s '.[1].hooks as $s | .[0] | .hooks = (reduce ($s|keys[]) as $k ((.hooks // {}); .[$k] = ((.[$k] // []) + $s[$k])))' \
-        "$settings" "$kit/hooks/claude/settings-hooks.json" > "$settings.tmp" && mv "$settings.tmp" "$settings"
-      echo "settings.json: kit hooks added (backup saved next to it)"
-    fi
+    # drop earlier kit entries (any version), then add the current ones
+    jq --arg t "$tag" '.hooks |= ((. // {}) | with_entries(.value |= map(select([.hooks[]?.command // ""] | any(contains($t)) | not))))' "$settings" > "$settings.tmp" &&
+    jq -s '.[1].hooks as $s | .[0] | .hooks = (reduce ($s|keys[]) as $k ((.hooks // {}); .[$k] = ((.[$k] // []) + $s[$k])))' \
+      "$settings.tmp" "$kit/hooks/claude/settings-hooks.json" > "$settings.tmp2" && mv "$settings.tmp2" "$settings" && rm -f "$settings.tmp"
+    echo "settings.json: kit hooks set to current version (backup saved next to it)"
   fi
   echo "Done. Start a new Claude Code session to load the skills."
   exit 0

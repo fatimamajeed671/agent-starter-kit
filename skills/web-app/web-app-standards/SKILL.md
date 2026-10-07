@@ -28,10 +28,10 @@ Generic checklist for shipping a front end safely. For visual and UX rules use t
 
 ## QA checklist
 
-- Animation: test with reduced motion both on and off, at phone (touch) and desktop (mouse) widths. Every reveal ends at opacity 1 within 2s of entering view. CLS at most 0.1. At most one long frame over 200 ms, p95 rAF at most 20 ms. Reduced motion means no moving animation. No-JS and CDN-blocked render all text. Loops are idle offscreen; loops over 5s have a pause control. Never animate one element from two tweens.
-- Scroll: every #anchor lands just below the fixed nav (click and cold load); back restores scroll position; no horizontal overflow from 320 to 1440; scroll-trigger positions stable after fonts, images and resize. Section gaps at most 160px desktop, 110px mobile.
+- Animation: test with reduced motion both on and off, at phone (touch) and desktop (mouse) widths. Every reveal ends at opacity 1 within 2s of entering view. CLS at most 0.1. At most one long frame over 200 ms, p95 rAF at most 20 ms. Reduced motion means no moving animation. No-JS and CDN-blocked render all text. Loops are idle offscreen; loops over 5s have a pause control. Never animate one element from two tweens. Sample opacity and transform at 0.3, 1, 2 and 5 s after trigger, not just the end state.
+- Scroll: every #anchor lands just below the fixed nav (click and cold load); back restores scroll position; no horizontal overflow from 320 to 1440; scroll-trigger positions stable after fonts, images and resize. Section gaps at most 160px desktop, 110px mobile. Space sections with one rule (padding-top from a shared scale, padding-bottom 0) so paddings never stack.
 - Click: hit-test every control with `elementFromPoint` at phone and desktop widths. Targets at least 24px (WCAG 2.5.8), flag under 44. Tab order, visible focus, no trap, Esc closes menus and returns focus. Links return 200 and their ids exist. `_blank` links have `noopener`. Form labels, autocomplete, announced errors. axe-core wcag22aa clean. Console clean.
-- Visual: review 100% crops at phone and desktop widths, not scaled sheets. Heading line counts at 360/390/1373 with no lone last word. JSON-LD parses.
+- Visual: review 100% crops at phone and desktop widths, not scaled sheets. Measure alignment rather than eyeballing it: an icon's centre within 4px of its label's centre. Heading line counts at 360/390/1373 with no lone last word. JSON-LD parses. Tag lists wrap with gaps, not separator characters, so no line starts or ends with a separator. Cards repeat the same fields in the same order with the same spacing. Anything not clickable must not look clickable (no hover slide on non-link steps).
 
 ## Deploy hygiene
 
@@ -52,6 +52,8 @@ Generic checklist for shipping a front end safely. For visual and UX rules use t
 - Extension output filters can block results with emails or query strings; return hashes or booleans.
 - Parallel agents need random HTTP and CDP ports; kill strays (`pgrep -fl remote-debugging-port`). Never run two audit processes on one fixed port.
 - Headless SwiftShader "GPU stall" warnings are noise.
+- A base `img{height:auto}` beats a card photo's `height:100%` and lets tall photos overflow their frame; scope the reset with `:where(img)`.
+- Swapping a button's `textContent` also deletes anything nested in it (badges, icons); keep badges outside the button or swap only the text node.
 - PageSpeed API without a key hits a shared daily quota; use the host's panel or a keyed call.
 
 ## Scripts (Node 22, no dependencies, local headless Chrome over CDP)
