@@ -4,5 +4,6 @@ SUBAGENT MODEL RULES (set `model` on every Agent call; use the named agent type 
 - Mid tier (Sonnet): building from a spec and visual review. The builder is never the reviewer.
 - Strongest tier (this model): plans and decides; does not edit, audit or screenshot when a subagent can.
 - Subagents reply in 5 lines or fewer; details go to a REPORT.md. Reuse an agent via SendMessage for follow-ups. Verify by checksum or measurement, never assume a change landed.
+- Delegate broad searches, parallel work, long mechanical runs and context-heavy steps; keep small or judgement-heavy steps inline; use a fresh reviewer.
 Full rules: agent-workflow-practices SKILL.md.
 <!-- agent-workflow:end -->

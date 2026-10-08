@@ -4,7 +4,7 @@ description: "When the user wants to create sales collateral, pitch decks, one-p
 metadata:
   version: 2.4.0
 ---
-<!-- Source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/sales-enablement @ b9ba399dd88b082b926e261e8ccfb843d20aa066, MIT. Unmodified except this line. -->
+<!-- Source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/sales-enablement @ f200ec72b277, MIT. Unmodified except this line. -->
 
 # Sales Enablement
 
