@@ -27,6 +27,7 @@ Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed 
 | `skills/agent-workflow/agent-workflow-practices` | agent-workflow | Roles by model tier, short reports, batching, handoff files for multi-agent work. | Claude Code |
 | `skills/agent-workflow/improve-prompt` | agent-workflow | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
 | `skills/agent-workflow/token-diet` | agent-workflow | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
+| `skills/agent-workflow/skill-research` | agent-workflow | Find, vet and add third-party skills: search, licence and safety checks, attribution. | Claude Code |
 | `hooks/claude/` | Optional nudges in one script: loads token-diet and the subagent model rules at session start, warns before reading a huge file whole, flags a bloated memory folder, warns when the context grows large, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
 | `sync/sync.sh` | Optional: keep your skills identical on several machines through a private git repo. | Any machine with git |
@@ -34,6 +35,8 @@ Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed 
 | `skills/sales/sales-enablement` | sales | Decks, one-pagers, objection docs, battle cards, demo and call scripts, win-loss analysis. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
 | `skills/sales/objection-handling` | sales | Surface the real objection behind the stated one, resolve it with evidence, re-ask. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
 | `skills/sales/cold-outreach-sequence` | sales | Researched LinkedIn and email outreach sequences with a pipeline tracker. Unmodified MIT copy, see its `SOURCES.md` and `NOTICE.md`. | Claude Code |
+| `skills/leads/prospecting` | leads | Build verified, scored prospect lists: SaaS, B2B, local business and demand-signal branches, enrichment, signals, account research, compliance. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
+| `skills/leads/revops` | leads | Lead lifecycle, scoring, routing, pipeline stages, CRM automation and handoff SLAs. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
 
 ## Install
 
@@ -93,9 +96,10 @@ It removes the kit's hooks and their `settings.json` entries, and removes each k
 - `skills/sales/cold-email` and `skills/sales/sales-enablement` are unmodified copies from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT, Corey Haines).
 - `skills/sales/objection-handling` is an unmodified copy from [deciqAI/knowledge-skills](https://github.com/deciqAI/knowledge-skills) (MIT, deciqAI).
 - `skills/sales/cold-outreach-sequence` is an unmodified copy from [brianrwagner/ai-marketing-claude-code-skills](https://github.com/brianrwagner/ai-marketing-claude-code-skills) (MIT per the author's README; no LICENSE file, see its `NOTICE.md`).
+- `skills/leads/prospecting` and `skills/leads/revops` are unmodified copies from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT, Corey Haines).
 
 Neither source repo publishes a licence, so those two folders are not covered by this repo's licence; rights stay with their authors. Authors: open an issue and they will be credited differently or removed.
 
 ## Licence
 
-MIT for everything except the two adapted skills above. The four `skills/sales` copies keep their own upstream MIT licences (a `LICENSE` file in each folder, or a `NOTICE.md` quoting the README where upstream has none). See [LICENSE](LICENSE).
+MIT for everything except the two adapted skills above. The four `skills/sales` copies and the two `skills/leads` copies keep their own upstream MIT licences (a `LICENSE` file in each folder, or a `NOTICE.md` quoting the README where upstream has none). See [LICENSE](LICENSE).

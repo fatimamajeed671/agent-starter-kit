@@ -18,6 +18,12 @@ Rules for multi-step work where one lead agent plans and subagents do the work. 
 
 Why: the cheapest tier misses visual issues, and a redo costs more than using the mid tier once. The builder is never the reviewer. One reviewer per release.
 
+## When to delegate
+
+- Delegate whenever subagents give a better or cheaper result: broad searches, independent parallel work, long mechanical runs, and anything that would flood the lead's context.
+- Keep small, sequential or judgement-heavy steps inline.
+- A fresh reviewer beats self-review.
+
 ## Reports
 
 - Every subagent replies in 5 lines or fewer. Details go to a REPORT.md next to the work.

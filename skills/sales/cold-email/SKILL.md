@@ -4,7 +4,7 @@ description: Write and run B2B cold outbound that gets replies, from cold emails
 metadata:
   version: 2.2.0
 ---
-<!-- Source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/cold-email @ b9ba399dd88b082b926e261e8ccfb843d20aa066, MIT. Unmodified except this line and one word (a Microsoft consumer-mail name replaced by Outlook.com, repo leak filter). -->
+<!-- Source: https://github.com/coreyhaines31/marketingskills/tree/main/skills/cold-email @ f200ec72b277, MIT. Unmodified except this line and one word (a Microsoft consumer-mail name replaced by Outlook.com, repo leak filter). -->
 
 # Cold Email Writing
 
