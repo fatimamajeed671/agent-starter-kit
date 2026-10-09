@@ -30,6 +30,10 @@ Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed 
 | `hooks/claude/` | Optional nudges in one script: loads token-diet and the subagent model rules at session start, warns before reading a huge file whole, flags a bloated memory folder, warns when the context grows large, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
 | `sync/sync.sh` | Optional: keep your skills identical on several machines through a private git repo. | Any machine with git |
+| `skills/sales/cold-email` | sales | B2B cold outbound: emails, follow-ups, sending setup, LinkedIn, multichannel cadence, reply handling. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
+| `skills/sales/sales-enablement` | sales | Decks, one-pagers, objection docs, battle cards, demo and call scripts, win-loss analysis. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
+| `skills/sales/objection-handling` | sales | Surface the real objection behind the stated one, resolve it with evidence, re-ask. Unmodified MIT copy, see its `SOURCES.md`. | Claude Code |
+| `skills/sales/cold-outreach-sequence` | sales | Researched LinkedIn and email outreach sequences with a pipeline tracker. Unmodified MIT copy, see its `SOURCES.md` and `NOTICE.md`. | Claude Code |
 
 ## Install
 
@@ -86,9 +90,12 @@ It removes the kit's hooks and their `settings.json` entries, and removes each k
 - `skills/agent-workflow/token-diet` is a shortened adaptation of [Kulaxyz/token-diet](https://github.com/Kulaxyz/token-diet).
 - `skills/content/anti-ai-slop-writing` is a shortened adaptation of [jalaalrd/anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing).
 - `skills/design/ui-ux-design` credits its sources and licences in its own `SOURCES.md` and `NOTICE` files.
+- `skills/sales/cold-email` and `skills/sales/sales-enablement` are unmodified copies from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (MIT, Corey Haines).
+- `skills/sales/objection-handling` is an unmodified copy from [deciqAI/knowledge-skills](https://github.com/deciqAI/knowledge-skills) (MIT, deciqAI).
+- `skills/sales/cold-outreach-sequence` is an unmodified copy from [brianrwagner/ai-marketing-claude-code-skills](https://github.com/brianrwagner/ai-marketing-claude-code-skills) (MIT per the author's README; no LICENSE file, see its `NOTICE.md`).
 
 Neither source repo publishes a licence, so those two folders are not covered by this repo's licence; rights stay with their authors. Authors: open an issue and they will be credited differently or removed.
 
 ## Licence
 
-MIT for everything except the two adapted skills above. See [LICENSE](LICENSE).
+MIT for everything except the two adapted skills above. The four `skills/sales` copies keep their own upstream MIT licences (a `LICENSE` file in each folder, or a `NOTICE.md` quoting the README where upstream has none). See [LICENSE](LICENSE).
