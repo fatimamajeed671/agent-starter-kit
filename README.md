@@ -26,6 +26,7 @@ Skills are grouped in segment folders (`skills/<segment>/<name>`) and installed 
 | `skills/web-app/web-app-standards` | web-app | Security headers, QA checklist, deploy-by-hash, browser testing gotchas, two audit scripts. | Claude Code |
 | `skills/agent-workflow/agent-workflow-practices` | agent-workflow | Roles by model tier, short reports, batching, handoff files for multi-agent work. | Claude Code |
 | `skills/agent-workflow/improve-prompt` | agent-workflow | Checks a prompt for a missing target, goal or success check and asks up to 3 questions before work starts. | Claude Code (`/improve-prompt`) |
+| `skills/agent-workflow/roadmap` | agent-workflow | A personal task list of steps only you can do, in segments; the agent asks about the next step each session and ticks it when you say done. | Claude Code |
 | `skills/agent-workflow/token-diet` | agent-workflow | Shorter replies, smaller reads, fewer turns, same correctness. | Claude Code |
 | `hooks/claude/` | Optional nudges in one script: loads token-diet and the subagent model rules at session start, warns before reading a huge file whole, flags a bloated memory folder, warns when the context grows large, suggests `/clear` after 40 prompts. | Claude Code |
 | `AGENTS.md` | The same core rules as a single file. | Codex and other `AGENTS.md` agents |
