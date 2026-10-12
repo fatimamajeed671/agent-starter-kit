@@ -17,6 +17,11 @@ SessionStart)
   for act in "$HOME/.claude/skills/token-diet/activation.md" "$HOME/.claude/skills/agent-workflow-practices/activation.md"; do
     [ -f "$act" ] && msgs+=("$(cat "$act")")
   done
+  rm="$HOME/.claude/skills/roadmap"
+  if [ -f "$rm/roadmap.sh" ] && steps=$(bash "$rm/roadmap.sh" next 2>/dev/null) && [ -n "$steps" ]; then
+    msgs+=("$(cat "$rm/activation.md")
+$steps")
+  fi
   dir="${MEMORY_DIR:-$HOME/.claude/projects/$(echo "$HOME" | tr / -)/memory}"
   if [ -d "$dir" ]; then
     n=$(wc -l < "$dir/MEMORY.md" 2>/dev/null | tr -d ' ')
