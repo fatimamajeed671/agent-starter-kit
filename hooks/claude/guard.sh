@@ -21,6 +21,9 @@ SessionStart)
   if [ -f "$rm/roadmap.sh" ] && steps=$(bash "$rm/roadmap.sh" next 2>/dev/null) && [ -n "$steps" ]; then
     msgs+=("$(cat "$rm/activation.md")
 $steps")
+    sys="Your next step in each segment:
+$steps
+Say \"expand <segment>\" to see all its steps."   # systemMessage is printed to the user at session start, before they type
   fi
   dir="${MEMORY_DIR:-$HOME/.claude/projects/$(echo "$HOME" | tr / -)/memory}"
   if [ -d "$dir" ]; then
@@ -56,4 +59,4 @@ esac
 
 [ ${#msgs[@]} -eq 0 ] && exit 0
 m=$(printf '%s\n\n' "${msgs[@]}")
-jq -n --arg e "$ev" --arg m "$m" '{hookSpecificOutput:{hookEventName:$e,additionalContext:$m}}'
+jq -n --arg e "$ev" --arg m "$m" --arg s "${sys:-}" '{hookSpecificOutput:{hookEventName:$e,additionalContext:$m}} + (if $s == "" then {} else {systemMessage:$s} end)'

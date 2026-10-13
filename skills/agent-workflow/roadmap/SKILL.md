@@ -24,7 +24,7 @@ IDs are unique (R1, R2...). Order is priority. The first open step of each segme
 
 ## Use
 
-- `roadmap.sh next` shows one open step per segment, `list` shows all, `done ID` ticks one.
+- `roadmap.sh next` shows one open step per segment, `list` shows all, `list <segment>` expands one segment (any part of its name), `done ID` ticks one.
 - Adding a step: append a `- [ ] Rn ...` line under its segment; take the next free ID.
 - The session-start hook (`hooks/claude/guard.sh`, with `activation.md` from this skill) does the asking; without hooks, run the script yourself at the start of a session and ask the same question.
 - Only offer steps; never start one the user did not choose.
